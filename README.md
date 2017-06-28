@@ -1,1 +1,2 @@
 # collect_bot
+slack
