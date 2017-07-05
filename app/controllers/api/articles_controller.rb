@@ -46,7 +46,7 @@ module Api
                 else
                     logger.error　format.json { render json: @article.errors, status: :unprocessable_entity }
                     response = {'text' => "登録できませんでした。"}
-                    render json: => {'text' => response}
+                    render json: response
                 end
             }
             
