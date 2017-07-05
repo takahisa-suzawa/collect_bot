@@ -41,10 +41,10 @@ module Api
                 @article = Article.new(:postedDate => timestamp, :title => trigger, :url => text)
             
                 if @article.save
-                    render json: "text" => "登録しました。"
+                    render json: {:text => "登録しました。"}
                 else
                     logger.error　format.json { render json: @article.errors, status: :unprocessable_entity }
-                    render json: "text" => "登録できませんでした。"
+                    render json: {:text => "登録できませんでした。"}
                 end
             }
             
