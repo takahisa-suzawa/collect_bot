@@ -36,10 +36,10 @@ module Api
             logger.debug "○○○○○○○○○○○○○○○#{trigger} #{text}"
             url = ""
             if text =~ /^(<http?|<ftp)(:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)(>)$/
-                url = text[0, text.index(/¥>/) + 1]
+                url = $1 + $2 + $3
             end 
             if url.nil? && text =~ /^(<https?|<ftp)(:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)(>)$/
-                url = text[0, text.index(/¥>/) + 1]
+                url = $1 + $2 + $3
             end 
             
             if url.present?
