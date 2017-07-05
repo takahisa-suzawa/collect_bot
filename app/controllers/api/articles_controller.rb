@@ -34,13 +34,20 @@ module Api
         
         begin
             logger.debug "○○○○○○○○○○○○○○○#{trigger} #{text}️"
-            @article = Article.new(:postedDate => timestamp, :title => trigger)
+            if (text.match(/^(<http?|<ftp)(:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)(>)$/)
+                || text.match(/^(<https?|<ftp)(:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)(>)$/)) {
+                
+                text = text[0, text.index(/¥>/) + 1]
+                @article = Article.new(:postedDate => timestamp, :title => trigger, :url => text)
             
-            if @article.save
-                render json: @article
-            else
-                format.json { render json: @article.errors, status: :unprocessable_entity }
-            end
+                if @article.save
+                    render json: "text" => "登録しました。"
+                else
+                    logger.error　format.json { render json: @article.errors, status: :unprocessable_entity }
+                    render json: "text" => "登録できませんでした。"
+                end
+            }
+            
             
         rescue ActionRecord::RecordInvalid, ActionRecord::RecordNotSaved => ex
             format.json { render json: ex, status: :unprocessable_entity }
