@@ -36,17 +36,17 @@ module Api
             logger.debug "○○○○○○○○○○○○○○○#{trigger} #{text}"
             url = ""
             if text =~ /^(<http?|<ftp)(:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)(>)$/
-                url = $1
+                url = text[0, text.index(/¥>/) + 1]
             end 
             if url.nil? && text =~ /^(<https?|<ftp)(:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)(>)$/
-                url = $1
+                url = text[0, text.index(/¥>/) + 1]
             end 
             
             if url.present?
-                @article = Article.new(:postedDate => timestamp, :title => trigger, :url => url)
+                @article = Article.new(:postedDate => timestamp, :title => trigger, :url => text)
             
                 if @article.save
-                    response = {'text' => "I registered .->#{url}"}
+                    response = {'text' => "I registered .->#{text}"}
                     render json: response
                 else
                     logger.error　@article.errors
