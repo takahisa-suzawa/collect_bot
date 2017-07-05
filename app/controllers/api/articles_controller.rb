@@ -33,24 +33,27 @@ module Api
 
         
         begin
-            logger.debug "○○○○○○○○○○○○○○○#{trigger} #{text}️"
-            if (text.match(/^(<http?|<ftp)(:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)(>)$/)
-                || text.match(/^(<https?|<ftp)(:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)(>)$/)) {
-                
-                text = text[0, text.index(/¥>/) + 1]
-                @article = Article.new(:postedDate => timestamp, :title => trigger, :url => text)
+            logger.debug "○○○○○○○○○○○○○○○#{trigger} #{text}"
+            url = ""
+            if text =~ /^(<http?|<ftp)(:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)(>)$/
+                url = $1
+            end 
+            if url.nil? && text =~ /^(<https?|<ftp)(:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)(>)$/
+                url = $1
+            end 
+            
+            if url.present?
+                @article = Article.new(:postedDate => timestamp, :title => trigger, :url => url)
             
                 if @article.save
-                    response = {'text' => "I registered .->#{text}"}
+                    response = {'text' => "I registered .->#{url}"}
                     render json: response
                 else
                     logger.error　@article.errors
                     response = {'text' => "sorry! Registration failed!"}
                     render json: response
                 end
-            }
-            
-            
+            end
         rescue => ex
             logger.error　ex
         end
