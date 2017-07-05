@@ -44,15 +44,15 @@ module Api
                     response = {'text' => "I registered .->#{text}"}
                     render json: response
                 else
-                    logger.error　format.json { render json: @article.errors, status: :unprocessable_entity }
+                    logger.error　@article.errors
                     response = {'text' => "sorry! Registration failed!"}
                     render json: response
                 end
             }
             
             
-        rescue ActionRecord::RecordInvalid, ActionRecord::RecordNotSaved => ex
-            format.json { render json: ex, status: :unprocessable_entity }
+        rescue => ex
+            logger.error　ex
         end
     end
 
