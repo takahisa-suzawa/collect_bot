@@ -1,3 +1,6 @@
+require 'open-uri'
+require 'nokogiri'
+
 module Api
     class ArticlesController < ApplicationController
     before_action :set_article, only: [:show, :edit, :update, :destroy]
@@ -43,10 +46,21 @@ module Api
             end 
             
             if url.present?
-                @article = Article.new(:postedDate => timestamp, :title => trigger, :url => text)
+                charset = nil
+                html = open(url) do |f|
+                    charset = f.charset # 文字種別を取得
+                    f.read # htmlを読み込んで変数htmlに渡す
+                end
+
+                # htmlをパース(解析)してオブジェクトを生成
+                doc = Nokogiri::HTML.parse(html, nil, charset)
+                # タイトルを表示
+                title = doc.title
+
+                @article = Article.new(:postedDate => timestamp, :title => trigger, :url => text, :title => title)
             
                 if @article.save
-                    response = {'text' => "I registered .->#{text}"}
+                    response = {'text' => "I registered .->#{title}"}
                     render json: response
                 else
                     logger.error　@article.errors
