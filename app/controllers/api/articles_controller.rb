@@ -38,14 +38,15 @@ module Api
         begin
             logger.debug "○○○○○○○○○○○○○○○#{trigger} #{text}"
             url = ""
-            if text =~ /^(<http?|<ftp)(:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)(>)$/
-                url = $1 + $2 + $3
+            if text =~ /^(<)(http?|<ftp)(:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)(>)$/
+                url = $2 + $3
             end 
-            if url.nil? && text =~ /^(<https?|<ftp)(:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)(>)$/
-                url = $1 + $2 + $3
+            if url.nil? && text =~ /^(<)(https?|<ftp)(:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)(>)$/
+                url = $2 + $3
             end 
             
             if url.present?
+                logger.debug "url #{url}"
                 charset = nil
                 html = open(url) do |f|
                     charset = f.charset
