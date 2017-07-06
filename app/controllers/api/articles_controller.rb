@@ -48,15 +48,15 @@ module Api
             if url.present?
                 charset = nil
                 html = open(url) do |f|
-                    charset = f.charset # 文字種別を取得
-                    f.read # htmlを読み込んで変数htmlに渡す
+                    charset = f.charset
+                    f.read
                 end
-
-                # htmlをパース(解析)してオブジェクトを生成
+                
                 doc = Nokogiri::HTML.parse(html, nil, charset)
-                # タイトルを表示
-                title = doc.title
-
+                if doc.present?
+                   title = doc.title
+                end
+            
                 @article = Article.new(:postedDate => timestamp, :title => trigger, :url => text, :title => title)
             
                 if @article.save
@@ -69,7 +69,8 @@ module Api
                 end
             end
         rescue => ex
-            logger.error　ex
+            logger.fatal　ex
+            render json: ex
         end
     end
 
