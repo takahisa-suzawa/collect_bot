@@ -1,5 +1,3 @@
-require "#{Rails.root}/app/controllers/application_controller.rb"
-
 module Api
   module V1
     class WebhooksController < ApplicationController
@@ -10,8 +8,6 @@ module Api
 
       # POST api/v1/webhooks
       def create
-        logger.debug '@@@@@@@@@@@@@@@@@@@@@@@@@@'
-        logger.debug params
         @webhook = webhook.new(webhook_params)
         respond_to do |format|
           if @webhook.save
@@ -29,7 +25,6 @@ module Api
         def webhook_params
           params.require(:webhook).permit(:token, :team_id, :team_domain, :channel_id, :channel_name, :timestamp, :user_id, :user_name, :text, :trigger_word)
         end
-      end
     end
   end
 end
