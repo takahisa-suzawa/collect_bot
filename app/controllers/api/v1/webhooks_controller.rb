@@ -1,3 +1,6 @@
+require 'open-uri'
+require 'nokogiri'
+
 module Api
   module V1
     class WebhooksController < ApplicationController
@@ -18,12 +21,31 @@ module Api
         end
 
         # webhookの命令を実行する
-        # @セキュリから始まっているか ＜未実装＞
+        order = @webhook.text.delete(@webhook.trigger_word).split(" ")
 
-        # URLから始まっているか
-        url = slice_url @webhook.text
+        if 'help' == order[0]
+          response = {'text' => "#{@webhook.trigger_word} help ¥n #{@webhook.trigger_word} post <url> ¥n "}
+        elsif 'post' == order[0]
+          url = parse_html order[1].delete('<','>').chomp
+          p url
+          html = parse_html url
+          if html.present?
+            # タイトルを表示
+            title = html.title
 
-        # それ以外はスルーする
+            @article = Article.new(:postedDate => @webhook.timestamp, :url => url, :title => title)
+            if @article.save
+              response = {'text' => "I registered #{title}"}
+            else
+              logger.error　@article.errors
+              response = {'text' => "sorry! Registration failed!"}
+            end
+          else
+            response = {'text' => "not url #{order[1]}"}
+          end
+        else
+          response = {'text' => "sorry!! unsported command. help=> #{@webhook.trigger_word} help"}
+        end
         render json: response
       end
 
@@ -31,18 +53,20 @@ module Api
       def webhook_params
         params.permit(:token, :team_id, :team_domain, :channel_id, :channel_name, :timestamp, :user_id, :user_name, :text, :trigger_word)
       end
-      
-      def 
 
-      def slice_url(url)
-        url = nil
-        if text =~ /^(<http?|<ftp)(:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)(>)$/
-            url = $1 + $2 + $3
-        end 
-        if url.nil? && text =~ /^(<https?|<ftp)(:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)(>)$/
-            url = $1 + $2 + $3
+      def parse_html(url)
+        charset = nil
+        begin
+          html = open(url) do |f|
+            charset = f.charset # 文字種別を取得
+            f.read # htmlを読み込んで変数htmlに渡す
+          end
+
+          # htmlをパース(解析)してオブジェクトを生成
+          Nokogiri::HTML.parse(html, nil, charset)
+        rescue
+          return nil
         end
-        return url
       end
     end
   end
