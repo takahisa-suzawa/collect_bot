@@ -1,5 +1,6 @@
 require 'open-uri'
 require 'nokogiri'
+require 'RMagick'
 
 module Api
   module V1
@@ -22,18 +23,22 @@ module Api
 
         # webhookの命令を実行する
         order = @webhook.text.delete(@webhook.trigger_word).split(" ")
-
+        
         if 'help' == order[0]
           response = {'text' => "#{@webhook.trigger_word} help ¥n #{@webhook.trigger_word} post <url> ¥n "}
         elsif 'post' == order[0]
-          url = parse_html order[1].delete('<','>').chomp
-          p url
+          url = order[1].delete('<','>').chomp
           html = parse_html url
           if html.present?
             # タイトルを表示
             title = html.title
+ 
+            thumbnail = parse_thumbnail(html)
+            if thumbnail.nil?
+              thumbnail = 'secury_log.jpg'
+            end
 
-            @article = Article.new(:postedDate => @webhook.timestamp, :url => url, :title => title)
+            @article = Article.new(:post_date => @webhook.timestamp, :url => url, :title => title, :image => thumbnail)
             if @article.save
               response = {'text' => "I registered #{title}"}
             else
@@ -41,7 +46,7 @@ module Api
               response = {'text' => "sorry! Registration failed!"}
             end
           else
-            response = {'text' => "not url #{order[1]}"}
+            response = {'text' => "not url #{url}"}
           end
         else
           response = {'text' => "sorry!! unsported command. help=> #{@webhook.trigger_word} help"}
@@ -63,11 +68,35 @@ module Api
           end
 
           # htmlをパース(解析)してオブジェクトを生成
-          Nokogiri::HTML.parse(html, nil, charset)
-        rescue
+          return Nokogiri::HTML.parse(html, nil, charset)
+        rescue => e
+          logger.error e
           return nil
         end
       end
+
+      def parse_thumbnail(html)
+        #imgタグだけ取得
+        images = html.css('img')
+        # 100 x 100pxの画像があるかチェック
+        if images.present?
+          # Check the size with RMagick
+          url = nil
+          images.each do |image|
+            url = image.attributes["src"].value
+            begin
+              rm_image = Magick::ImageList.new(url)
+              if rm_image.columns >= 100 && rm_image.rows >= 100  
+                break
+              end
+            rescue => e
+              logger.warn e
+            end 
+          end
+          return url
+        end
+      end
+
     end
   end
 end
