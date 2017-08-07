@@ -38,22 +38,23 @@ module Api
         begin
             logger.debug "○○○○○○○○○○○○○○○#{trigger} #{text}"
             url = ""
-            if text =~ /^(<http?|<ftp)(:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)(>)$/
-                url = $1 + $2 + $3
+            if text =~ /^(<)(http?|<ftp)(:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)(>)$/
+                url = $2 + $3
             end 
-            if url.nil? && text =~ /^(<https?|<ftp)(:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)(>)$/
-                url = $1 + $2 + $3
+            if url.nil? && text =~ /^(<)(https?|<ftp)(:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)(>)$/
+                url = $2 + $3
             end 
             
             if url.present?
+                logger.debug "url #{url}"
                 charset = nil
                 html = open(url) do |f|
-                    charset = f.charset # 文字種別を取得
-                    f.read # htmlを読み込んで変数htmlに渡す
+                    charset = f.charset
+                    f.read
                 end
-
-                # htmlをパース(解析)してオブジェクトを生成
+                
                 doc = Nokogiri::HTML.parse(html, nil, charset)
+
                 # タイトルを表示
                 title = doc.title
 
@@ -69,7 +70,8 @@ module Api
                 end
             end
         rescue => ex
-            logger.error　ex
+            logger.fatal　ex
+            render json: ex
         end
     end
 
