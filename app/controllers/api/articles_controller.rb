@@ -57,7 +57,7 @@ module Api
                 # タイトルを表示
                 title = doc.title
 
-                @article = Article.new(:postedDate => timestamp, :title => trigger, :url => text, :title => title)
+                @article = Article.new(:post_date => timestamp, :title => trigger, :url => text, :title => title)
             
                 if @article.save
                     response = {'text' => "I registered .->#{title}"}
@@ -83,7 +83,7 @@ module Api
 
         # Never trust parameters from the scary internet, only allow the white list through.
         def article_params
-        params.require(:article).permit(:url, :title, :postedDate, :content, :thumbnail)
+        params.require(:article).permit(:url, :title, :post_date, :content, :image)
         end
     end
 end

@@ -3,13 +3,13 @@
 one:
   url: MyText
   title: MyText
-  postedDate: 2017-06-29 11:30:19
+  post_date: 2017-06-29 11:30:19
   content: MyText
-  thumbnail: 
+  image: 
 
 two:
   url: MyText
   title: MyText
-  postedDate: 2017-06-29 11:30:19
+  post_date: 2017-06-29 11:30:19
   content: MyText
-  thumbnail: 
+  image: 

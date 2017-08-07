@@ -8,7 +8,7 @@ FactoryGirl.define do
     timestamp "2017-08-02 11:27:13"
     user_id "U2147483697"
     user_name "Steve"
-    text "@nyan post http://opt.co.jp/"
+    text "@nyan post http://www.itmedia.co.jp/enterprise/articles/1708/07/news068.html"
     trigger_word "@nyan"
   end
 

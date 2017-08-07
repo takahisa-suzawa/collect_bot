@@ -10,7 +10,7 @@ RSpec.describe "Webhooks", type: :request do
 
   describe "POST /api/v1/webhooks helpが投稿されたパターン" do
     before do
-      @params = FactoryGirl.attributes_for(:url_post)
+      @params = FactoryGirl.attributes_for(:url_help)
     end
     
     it '200が返ってくる' do
