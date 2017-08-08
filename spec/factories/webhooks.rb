@@ -8,7 +8,7 @@ FactoryGirl.define do
     timestamp "2017-08-02 11:27:13"
     user_id "U2147483697"
     user_name "Steve"
-    text "@s post <http://www.utali.io/entry/2016/10/06/210716>"
+    text "@s post <https://ref.xaio.jp/ruby/classes/string/delete>"
     trigger_word "@s"
   end
 

@@ -28,7 +28,7 @@ module Api
         if 'help' == order[1]
           response = {'text' => "次のコマンドが有効です。#{@webhook.trigger_word} help \n #{@webhook.trigger_word} post <url> \n "}
         elsif 'post' == order[1]
-          url = order[2].delete('<','>').chomp
+          url = order[2].delete('<').delete('>').chop
           html = parse_html url
           if html.present?
             # タイトルを表示
