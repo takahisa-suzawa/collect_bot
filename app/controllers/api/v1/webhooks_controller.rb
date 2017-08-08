@@ -26,7 +26,7 @@ module Api
         order = @webhook.text.delete(@webhook.trigger_word).split(" ")
         logger.info order
         if 'help' == order[0]
-          response = {'text' => "#{@webhook.trigger_word} help ¥n #{@webhook.trigger_word} post <url> ¥n "}
+          response = {'text' => "次のコマンドが有効です。#{@webhook.trigger_word} help \n #{@webhook.trigger_word} post <url> \n "}
         elsif 'post' == order[0]
           url = order[1].delete('<','>').chomp
           html = parse_html url
