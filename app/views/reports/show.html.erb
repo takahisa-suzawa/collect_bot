@@ -14,6 +14,29 @@
   <strong>Infomation:</strong>
   <%= @report.infomation %>
 </p>
-
 <%= link_to 'Edit', edit_report_path(@report) %> |
 <%= link_to 'Back', reports_path %>
+
+<p>
+  <strong>対象記事:</strong>
+</p>
+
+<div class="row">
+  <% @articles.each do |article| %>
+    <div class="col-sm-6 col-md-4">
+      <div class="image">
+        <a href='<%= article.url %>'><%= image_tag 'secury_log.jpg' %></a>
+        <div class="caption">
+          <h3><a href='<%= article.url %>'><%= article.title %></a></h3>
+          <p><%= article.content %></p></p>
+          <p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p>
+          <%= link_to 'Show', article %>
+          <%= link_to 'Edit', edit_article_path(article) %>
+          <%= link_to 'Destroy', article, method: :delete, data: { confirm: 'Are you sure?' } %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+
