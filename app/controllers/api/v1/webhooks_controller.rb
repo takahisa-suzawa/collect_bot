@@ -28,12 +28,11 @@ module Api
         if 'help' == order[1]
           response = {'text' => "次のコマンドが有効です。#{@webhook.trigger_word} help \n #{@webhook.trigger_word} post <url> \n "}
         elsif 'post' == order[1]
-          url = order[2].delete('<').delete('>').chop
+          url = order[2].delete('<').delete('>').chomp
           html = parse_html url
           if html.present?
             # タイトルを表示
             title = html.title
- 
             thumbnail = parse_thumbnail(html)
             if thumbnail.nil?
               thumbnail = 'secury_log.jpg'
