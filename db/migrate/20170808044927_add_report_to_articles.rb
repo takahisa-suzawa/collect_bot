@@ -1,5 +1,5 @@
 class AddReportToArticles < ActiveRecord::Migration[5.1]
   def change
-    add_reference :articles, :report, foreign_key: true
+    add_reference :articles, :report, index: true, foreign_key: true
   end
 end

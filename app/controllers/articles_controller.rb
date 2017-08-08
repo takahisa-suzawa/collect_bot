@@ -1,3 +1,5 @@
+require 'date'
+
 class ArticlesController < ApplicationController
   before_action :set_article, only: [:show, :edit, :update, :destroy]
 
@@ -24,8 +26,16 @@ class ArticlesController < ApplicationController
   # POST /articles
   # POST /articles.json
   def create
-    @article = Article.new(article_params)
+    now = Time.now
+    report = Report.find_accepting_report now
+    if report.nil?
+      report = Report.new(:accepted_date => now)
+      Report.transaction do
+        report.save!
+      end
+    end
 
+    @article = report.articles.build(article_params)
     respond_to do |format|
       if @article.save
         format.html { redirect_to @article, notice: 'Article was successfully created.' }
