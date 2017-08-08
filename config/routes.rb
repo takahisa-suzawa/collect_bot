@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :reports
   namespace :api, { format: 'json' } do
     resources :articles
     namespace :v1 do
