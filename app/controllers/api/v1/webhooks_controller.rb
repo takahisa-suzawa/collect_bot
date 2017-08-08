@@ -23,12 +23,12 @@ module Api
         end
 
         # webhookの命令を実行する
-        order = @webhook.text.delete(@webhook.trigger_word).split(" ")
+        order = @webhook.text.split(" ")
         logger.info order
-        if 'help' == order[0]
+        if 'help' == order[1]
           response = {'text' => "次のコマンドが有効です。#{@webhook.trigger_word} help \n #{@webhook.trigger_word} post <url> \n "}
-        elsif 'post' == order[0]
-          url = order[1].delete('<','>').chomp
+        elsif 'post' == order[1]
+          url = order[2].delete('<','>').chomp
           html = parse_html url
           if html.present?
             # タイトルを表示
