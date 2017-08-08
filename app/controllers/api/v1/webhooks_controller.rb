@@ -12,6 +12,7 @@ module Api
 
       # POST api/v1/webhooks
       def create
+        logger.info params
         @webhook = Webhook.new(webhook_params)
         
         if @webhook.save
@@ -23,7 +24,7 @@ module Api
 
         # webhookの命令を実行する
         order = @webhook.text.delete(@webhook.trigger_word).split(" ")
-        
+        logger.info order
         if 'help' == order[0]
           response = {'text' => "#{@webhook.trigger_word} help ¥n #{@webhook.trigger_word} post <url> ¥n "}
         elsif 'post' == order[0]
