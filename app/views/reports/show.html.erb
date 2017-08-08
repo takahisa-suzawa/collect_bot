@@ -1,6 +1,25 @@
 <p id="notice"><%= notice %></p>
 
-<h1>Articles</h1>
+<p>
+  <strong>Accepted date:</strong>
+  <%= @report.accepted_date %>
+</p>
+
+<p>
+  <strong>Report date:</strong>
+  <%= @report.report_date %>
+</p>
+
+<p>
+  <strong>Infomation:</strong>
+  <%= @report.infomation %>
+</p>
+<%= link_to 'Edit', edit_report_path(@report) %> |
+<%= link_to 'Back', reports_path %>
+
+<p>
+  <strong>対象記事:</strong>
+</p>
 
 <div class="row">
   <% @articles.each do |article| %>
@@ -21,6 +40,3 @@
 </div>
 
 
-<br>
-
-<%= link_to 'New Article', new_article_path %>
