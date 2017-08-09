@@ -64,4 +64,4 @@ gem 'bootstrap-sass'
 
 gem 'carrierwave'
 
-gem 'rmagick'
+gem 'rmagick', :require => 'RMagick'
