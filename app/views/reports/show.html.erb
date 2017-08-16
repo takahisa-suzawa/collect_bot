@@ -2,18 +2,14 @@
 
 <p>
   <strong>Accepted date:</strong>
-  <%= @report.accepted_date %>
+  <%= @report.accepting_timestamp %>
 </p>
 
 <p>
   <strong>Report date:</strong>
-  <%= @report.report_date %>
+  <%= @report.closed_timestamp %>
 </p>
 
-<p>
-  <strong>Infomation:</strong>
-  <%= @report.infomation %>
-</p>
 <%= link_to 'Edit', edit_report_path(@report) %> |
 <%= link_to 'Back', reports_path %>
 

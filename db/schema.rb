@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170808044927) do
+ActiveRecord::Schema.define(version: 20170816065728) do
 
   create_table "articles", force: :cascade do |t|
     t.text "url"
@@ -24,12 +24,28 @@ ActiveRecord::Schema.define(version: 20170808044927) do
     t.index ["report_id"], name: "index_articles_on_report_id"
   end
 
-  create_table "reports", force: :cascade do |t|
-    t.datetime "accepted_date"
-    t.datetime "report_date"
-    t.text "infomation"
+  create_table "infomations", force: :cascade do |t|
+    t.text "text"
+    t.integer "report_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["report_id"], name: "index_infomations_on_report_id"
+  end
+
+  create_table "mails", force: :cascade do |t|
+    t.string "title"
+    t.integer "report_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["report_id"], name: "index_mails_on_report_id"
+  end
+
+  create_table "reports", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "title"
+    t.boolean "send"
+    t.date "deliver_date"
   end
 
   create_table "webhooks", force: :cascade do |t|

@@ -37,14 +37,7 @@ module Api
             if thumbnail.nil?
               thumbnail = 'secury_log.jpg'
             end
-            report = Report.find_accepting_report @webhook.timestamp
-            if report.nil?
-              report = Report.new(:accepted_date => @webhook.timestamp)
-              Report.transaction do
-                report.save!
-              end
-            end
-
+            report = Report.find(:last)
             @article = report.articles.build(:post_date => @webhook.timestamp, :url => url, :title => title, :image => thumbnail, :report_id => report.id)
             if @article.save
               response = {'text' => "I registered #{title}"}
